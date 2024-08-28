@@ -4,12 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
+import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema, TloginFormData } from "@/schemas";
-import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
 	const router = useRouter();
@@ -36,15 +37,20 @@ export default function LoginForm() {
 		}
 	};
 	return (
-		<div className="w-[70%] bg-[#2A273A] p-5 rounded-lg">
+		<motion.div
+			initial={{ opacity: 0, scale: 0.5, y: 300 }}
+			whileInView={{ opacity: 1, scale: 1, y: 0 }}
+			transition={{ duration: 0.5, ease: "easeInOut" }}
+			viewport={{ once: true }}
+			className="w-[70%] bg-[#2A273A] py-5 rounded-lg">
 			<div className="w-full flex justify-between items-center">
-				<div className="w-1/2 h-full pointer-events-none">
+				<div className="w-1/2 pointer-events-none pl-5">
 					<Image
 						src={fromImage}
 						alt="fromImage"
 						className="w-full object-cover rounded-lg"
-						width={650}
-						height={500}
+						width={800}
+						height={400}
 						priority
 					/>
 				</div>
@@ -127,6 +133,6 @@ export default function LoginForm() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }

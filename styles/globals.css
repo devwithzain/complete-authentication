@@ -5,6 +5,10 @@
 body {
 	font-family: Poppins;
 }
+
+body::-webkit-scrollbar {
+	width: 0;
+}
 @font-face {
 	src: url("../font/Poppins.ttf");
 	font-family: Poppins;
