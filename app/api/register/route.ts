@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "../../../lib/prisma";
+import toast from "react-hot-toast";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { registerFormSchema } from "@/schemas";
+import { getUserByEmail } from "@/lib/get-user";
 
 export async function POST(request: Request) {
    try {
@@ -17,6 +19,13 @@ export async function POST(request: Request) {
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 12);
+
+      // Check if the email is already in use
+      const existingUser = await getUserByEmail(email);
+
+      if (existingUser) {
+         return toast.error("Email already in use");
+      }
 
       // Create the user in the database
       const user = await prisma.user.create({
