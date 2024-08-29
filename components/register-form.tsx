@@ -35,6 +35,7 @@ export default function RegisterForm({
 		} finally {
 			toast.success("Account Created!");
 			reset();
+			setToggle(!toggle);
 		}
 	};
 	return (
@@ -78,13 +79,13 @@ export default function RegisterForm({
 									<form
 										onSubmit={handleSubmit(onSubmits)}
 										className="flex flex-col gap-5">
-										<div className="flex items-center justify-between gap-5">
+										<div className="w-full flex items-center justify-between gap-5">
 											<div className="w-full flex flex-col gap-2">
 												<input
 													{...register("firstName")}
 													type="text"
 													placeholder="First Name"
-													className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+													className={`w-full bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
 														errors.firstName && "border-red-500 border-[1px]"
 													}`}
 												/>
@@ -99,7 +100,7 @@ export default function RegisterForm({
 													type="text"
 													{...register("lastName")}
 													placeholder="Last Name"
-													className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+													className={`w-full bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
 														errors.lastName && "border-red-500 border-[1px]"
 													}`}
 												/>

@@ -1,12 +1,13 @@
 "use client";
-import axios from "axios";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { motion } from "framer-motion";
+import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema, TloginFormData } from "@/schemas";
 
@@ -17,6 +18,7 @@ export default function LoginForm({
 	toggle: boolean;
 	setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+	const router = useRouter();
 	const {
 		register,
 		reset,
@@ -27,16 +29,27 @@ export default function LoginForm({
 	});
 
 	const onSubmits = async (data: TloginFormData) => {
+		const validateFields = loginFormSchema.safeParse(data);
+		if (!validateFields.success) {
+			return toast.error("Invalid data");
+		}
+		const { email, password } = validateFields.data;
+
 		try {
-			// await axios.post("/api/register", data);
-			console.log("datata", data);
+			await signIn("credentials", {
+				email,
+				password,
+				redirect: false,
+			});
 		} catch (error: any) {
 			toast.error("Error", error);
 		} finally {
 			reset();
 			toast.success("LogIn");
+			router.push("/setting");
 		}
 	};
+
 	return (
 		<>
 			{!toggle && (
@@ -125,11 +138,23 @@ export default function LoginForm({
 										<span className="w-full h-[2px] bg-[#6D6980]/30 rounded-lg" />
 									</div>
 									<div className="flex items-center justify-between gap-5">
-										<button className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
+										<button
+											onClick={() => {
+												signIn("google", {
+													callbackUrl: "/setting",
+												});
+											}}
+											className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
 											<FcGoogle size={22} />
 											Google
 										</button>
-										<button className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
+										<button
+											onClick={() => {
+												signIn("github", {
+													callbackUrl: "/setting",
+												});
+											}}
+											className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
 											<FaGithub size={22} />
 											Github
 										</button>

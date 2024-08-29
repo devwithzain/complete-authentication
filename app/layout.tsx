@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
+import ToastProvider from "@/providers/toast-provider";
 
 export const metadata: Metadata = {
 	title: "Authentication ToolTip",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body>{children}</body>
+			<body>
+				<ToastProvider />
+				{children}
+			</body>
 		</html>
 	);
 }
