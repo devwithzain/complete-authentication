@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import ToastProvider from "@/providers/toast-provider";
+import { ToastProvider } from "@/export";
 
 export const metadata: Metadata = {
 	title: "Authentication ToolTip",

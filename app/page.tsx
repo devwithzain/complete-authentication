@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { LoginForm, RegisterForm } from "@/components";
+import { LoginForm, RegisterForm } from "@/export";
 
 export default function App() {
 	const [toggle, setToggle] = useState(true);

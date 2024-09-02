@@ -5,11 +5,10 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { motion } from "framer-motion";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import { TregisterFormData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerFormSchema, TregisterFormData } from "@/schemas";
+import { registerFormSchema, Socials } from "@/export";
 
 export default function RegisterForm({
 	toggle,
@@ -30,12 +29,11 @@ export default function RegisterForm({
 	const onSubmits = async (data: TregisterFormData) => {
 		try {
 			await axios.post("/api/register", data);
-		} catch (error: any) {
-			toast.error("Error", error);
-		} finally {
 			toast.success("Account Created!");
-			reset();
 			setToggle(!toggle);
+		} catch (error: any) {
+			toast.error("Email already exist!");
+			reset();
 		}
 	};
 	return (
@@ -43,10 +41,9 @@ export default function RegisterForm({
 			{toggle && (
 				<>
 					<motion.div
-						initial={{ opacity: 0.5, scale: 0.5, y: 100 }}
-						whileInView={{ opacity: 1, scale: 1, y: 0 }}
-						transition={{ duration: 0.7, ease: "easeInOut" }}
-						viewport={{ once: true }}
+						initial={{ y: "115%" }}
+						animate={{ y: "0%" }}
+						transition={{ duration: 1, ease: "easeInOut" }}
 						className="w-[70%] bg-[#2A273A] py-5 rounded-lg">
 						<div className="w-full flex justify-between items-center">
 							<div className="w-1/2 pointer-events-none pl-5">
@@ -66,11 +63,11 @@ export default function RegisterForm({
 											Create an account
 										</h1>
 										<div className="flex items-center gap-2">
-											<button className="text-[16px] text-[#ADABB8] font-normal leading-tight tracking-tight">
+											<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
 												Already have an account?
 											</button>
 											<button
-												className="text-[16px] text-[#6C54B6] font-normal leading-tight tracking-tight underline"
+												className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline"
 												onClick={() => setToggle(!toggle)}>
 												LogIn
 											</button>
@@ -148,11 +145,11 @@ export default function RegisterForm({
 												type="checkbox"
 												className="w-5 h-5 outline-none border-none"
 											/>
-											<p className="text-[16px] text-[#ADABB8] font-normal leading-tight tracking-tight">
+											<p className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
 												I agrree to the
 											</p>
 											<Link
-												className="text-[16px] text-[#6C54B6] font-normal leading-tight tracking-tight underline"
+												className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline"
 												href="/terms-and-conditions">
 												Terms & Conditions
 											</Link>
@@ -166,27 +163,7 @@ export default function RegisterForm({
 											disabled={isSubmitting}
 										/>
 									</form>
-									<div className="flex flex-col gap-5">
-										<div className="flex items-center gap-4">
-											<span className="w-full h-[2px] bg-[#6D6980]/30 rounded-lg" />
-											<div className="min-w-fit">
-												<p className="text-[#6D6980] text-sm">
-													Or register with
-												</p>
-											</div>
-											<span className="w-full h-[2px] bg-[#6D6980]/30 rounded-lg" />
-										</div>
-										<div className="flex items-center justify-between gap-5">
-											<button className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
-												<FcGoogle size={22} />
-												Google
-											</button>
-											<button className="w-full flex items-center gap-2 justify-center bg-[#3A364D] text-white text-lg tracking-tight leading-tight rounded-lg p-4">
-												<FaGithub size={22} />
-												Github
-											</button>
-										</div>
-									</div>
+									<Socials />
 								</div>
 							</div>
 						</div>

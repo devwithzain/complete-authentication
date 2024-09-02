@@ -20,9 +20,8 @@ export async function POST(request: Request) {
 
       // Check if the email is already in use
       const existingUser = await getUserByEmail(email);
-      console.log(existingUser);
       if (existingUser) {
-         return toast.error("Email already in use");
+         return NextResponse.json({ error: "Email already exists!" }, { status: 400 });
       }
 
       // Create the user in the database
