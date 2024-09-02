@@ -32,7 +32,7 @@ export default function RegisterForm({
 			toast.success("Account Created!");
 			setToggle(!toggle);
 		} catch (error: any) {
-			toast.error("Email already exist!");
+			toast.error(error.response.data.error);
 			reset();
 		}
 	};

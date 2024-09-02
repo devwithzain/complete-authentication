@@ -35,11 +35,6 @@ export default function LoginForm({
 		const { email, password } = validateFields.data;
 
 		const existingUser = await getUserByEmail(email);
-		console.log(existingUser);
-
-		if (!existingUser || !existingUser.email || !existingUser.password) {
-			return { error: "Email does not exist!" };
-		}
 
 		try {
 			await signIn("credentials", {
@@ -50,7 +45,7 @@ export default function LoginForm({
 			toast.success("LogIn");
 			router.push("/setting");
 		} catch (error: any) {
-			toast.error("Error", error);
+			toast.error(error.response.data.error);
 			reset();
 		}
 	};

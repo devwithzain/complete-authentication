@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import toast from "react-hot-toast";
 import { NextResponse } from "next/server";
 import { getUserByEmail, prisma, registerFormSchema } from "@/export";
 
