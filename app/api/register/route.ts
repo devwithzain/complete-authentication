@@ -1,9 +1,7 @@
 import bcrypt from "bcryptjs";
 import toast from "react-hot-toast";
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { registerFormSchema } from "@/schemas";
-import { getUserByEmail } from "@/lib/get-user";
+import { getUserByEmail, prisma, registerFormSchema } from "@/export";
 
 export async function POST(request: Request) {
    try {
@@ -22,7 +20,7 @@ export async function POST(request: Request) {
 
       // Check if the email is already in use
       const existingUser = await getUserByEmail(email);
-
+      console.log(existingUser);
       if (existingUser) {
          return toast.error("Email already in use");
       }
