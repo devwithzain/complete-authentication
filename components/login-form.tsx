@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
@@ -6,18 +7,10 @@ import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { TloginFormData } from "@/schemas";
-import { useRouter } from "next/navigation";
-import { Socials, getUserByEmail, loginFormSchema } from "@/export";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Socials, getUserByEmail, loginFormSchema } from "@/export";
 
-export default function LoginForm({
-	toggle,
-	setToggle,
-}: {
-	toggle: boolean;
-	setToggle: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-	const router = useRouter();
+export default function LoginForm() {
 	const {
 		register,
 		reset,
@@ -34,106 +27,100 @@ export default function LoginForm({
 		}
 		const { email, password } = validateFields.data;
 
-		const existingUser = await getUserByEmail(email);
-
 		try {
 			await signIn("credentials", {
 				email,
 				password,
-				redirect: false,
+				redirectTo: "/setting",
 			});
 			toast.success("LogIn");
-			router.push("/setting");
 		} catch (error: any) {
 			toast.error(error.response.data.error);
+			console.log(error.response.data.error);
 			reset();
 		}
 	};
 
 	return (
-		<>
-			{!toggle && (
-				<motion.div
-					initial={{ y: "115%" }}
-					animate={{ y: "0%" }}
-					transition={{ duration: 1, ease: "easeInOut" }}
-					className="w-[70%] bg-[#2A273A] py-5 rounded-lg">
-					<div className="w-full flex justify-between items-center">
-						<div className="w-1/2 pointer-events-none pl-5">
-							<Image
-								src={fromImage}
-								alt="fromImage"
-								className="w-full object-cover rounded-lg"
-								width={800}
-								height={400}
-								priority
-							/>
-						</div>
-						<div className="w-1/2 flex items-center justify-center">
-							<div className="w-full px-10 flex justify-center flex-col gap-8">
-								<div className="flex flex-col gap-4">
-									<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
-										Welcome back
-									</h1>
-									<div className="flex items-center gap-2">
-										<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
-											Don&apos;t have an account?
-										</button>
-										<button
-											className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline"
-											onClick={() => setToggle(!toggle)}>
-											Create
-										</button>
-									</div>
-								</div>
-								<form
-									onSubmit={handleSubmit(onSubmits)}
-									className="flex flex-col gap-5">
-									<div className="flex flex-col gap-5">
-										<div className="flex flex-col gap-2">
-											<input
-												type="email"
-												{...register("email")}
-												placeholder="Email"
-												className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-													errors.email && "border-red-500 border-[1px]"
-												}`}
-											/>
-											{errors.email && (
-												<span className="text-red-500">
-													{errors.email.message}
-												</span>
-											)}
-										</div>
-										<div className="flex flex-col gap-2">
-											<input
-												type="password"
-												{...register("password")}
-												placeholder="Enter your password"
-												className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-													errors.password && "border-red-500 border-[1px]"
-												}`}
-											/>
-											{errors.password && (
-												<span className="text-red-500">
-													{errors.password.message}
-												</span>
-											)}
-										</div>
-									</div>
-									<input
-										type="submit"
-										value={`${isSubmitting ? "Loading..." : "Log In"}`}
-										className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
-										disabled={isSubmitting}
-									/>
-								</form>
-								<Socials />
+		<motion.div
+			initial={{ y: "115%" }}
+			animate={{ y: "0%" }}
+			transition={{ duration: 1, ease: "easeInOut" }}
+			className="w-[70%] bg-[#2A273A] py-5 rounded-lg">
+			<div className="w-full flex justify-between items-center">
+				<div className="w-1/2 pointer-events-none pl-5">
+					<Image
+						src={fromImage}
+						alt="fromImage"
+						className="w-full object-cover rounded-lg"
+						width={800}
+						height={400}
+						priority
+					/>
+				</div>
+				<div className="w-1/2 flex items-center justify-center">
+					<div className="w-full px-10 flex justify-center flex-col gap-8">
+						<div className="flex flex-col gap-4">
+							<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
+								Welcome back
+							</h1>
+							<div className="flex items-center gap-2">
+								<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
+									Don&apos;t have an account?
+								</button>
+								<Link
+									href="/sign-up"
+									className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline">
+									Create
+								</Link>
 							</div>
 						</div>
+						<form
+							onSubmit={handleSubmit(onSubmits)}
+							className="flex flex-col gap-5">
+							<div className="flex flex-col gap-5">
+								<div className="flex flex-col gap-2">
+									<input
+										type="email"
+										{...register("email")}
+										placeholder="Email"
+										className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+											errors.email && "border-red-500 border-[1px]"
+										}`}
+									/>
+									{errors.email && (
+										<span className="text-red-500 text-sm">
+											{errors.email.message}
+										</span>
+									)}
+								</div>
+								<div className="flex flex-col gap-2">
+									<input
+										type="password"
+										{...register("password")}
+										placeholder="Enter your password"
+										className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+											errors.password && "border-red-500 border-[1px]"
+										}`}
+									/>
+									{errors.password && (
+										<span className="text-red-500 text-sm">
+											{errors.password.message}
+										</span>
+									)}
+								</div>
+							</div>
+							<input
+								type="submit"
+								value={`${isSubmitting ? "Loading..." : "Log In"}`}
+								className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
+								disabled={isSubmitting}
+							/>
+						</form>
+						<Socials />
 					</div>
-				</motion.div>
-			)}
-		</>
+				</div>
+			</div>
+		</motion.div>
 	);
 }

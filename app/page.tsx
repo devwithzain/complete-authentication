@@ -1,19 +1,20 @@
-"use client";
-import { useState } from "react";
-import { LoginForm, RegisterForm } from "@/export";
+import Link from "next/link";
 
 export default function App() {
-	const [toggle, setToggle] = useState(true);
 	return (
 		<div className="w-full h-screen flex justify-center items-center p-5">
-			<RegisterForm
-				toggle={toggle}
-				setToggle={setToggle}
-			/>
-			<LoginForm
-				toggle={toggle}
-				setToggle={setToggle}
-			/>
+			<div className="flex items-center gap-2">
+				<Link
+					href="/sign-in"
+					className="text-lg text-white bg-black px-5 py-3 rounded-lg leading-tight tracking-tight">
+					SignIn
+				</Link>
+				<Link
+					href="/sign-up"
+					className="text-lg text-white bg-black px-5 py-3 rounded-lg leading-tight tracking-tight">
+					SignUp
+				</Link>
+			</div>
 		</div>
 	);
 }
