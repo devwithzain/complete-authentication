@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -7,8 +8,8 @@ import { motion } from "framer-motion";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { TloginFormData } from "@/schemas";
+import { Socials, loginFormSchema } from "@/export";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Socials, getUserByEmail, loginFormSchema } from "@/export";
 
 export default function LoginForm() {
 	const {
@@ -21,22 +22,16 @@ export default function LoginForm() {
 	});
 
 	const onSubmits = async (data: TloginFormData) => {
-		const validateFields = loginFormSchema.safeParse(data);
-		if (!validateFields.success) {
-			return toast.error("Invalid data");
-		}
-		const { email, password } = validateFields.data;
-
 		try {
+			await axios.post("/api/login", data);
 			await signIn("credentials", {
-				email,
-				password,
+				email: data.email,
+				password: data.password,
 				redirectTo: "/setting",
 			});
 			toast.success("LogIn");
 		} catch (error: any) {
-			toast.error(error.response.data.error);
-			console.log(error.response.data.error);
+			toast.error(error.response?.data?.error || "Login failed");
 			reset();
 		}
 	};
