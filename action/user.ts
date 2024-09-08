@@ -56,7 +56,6 @@ export const registerData = async (data: TregisterFormData) => {
 
    const { email, password, firstName, lastName } = validatedFields.data;
 
-   console.log(email);
    try {
       await prisma?.user.create({
          data: {
