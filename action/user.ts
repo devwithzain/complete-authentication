@@ -1,5 +1,6 @@
 "use server";
 
+import bcrypt from 'bcryptjs';
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { TloginFormData, TregisterFormData } from "@/schemas";
@@ -19,16 +20,38 @@ export const login = async (data: TloginFormData) => {
    const existingUser = await getUserByEmail(email);
    if (!existingUser) {
       return {
-         error: "Email already exists"
+         error: "Email not found"
       };
    }
 
    try {
-      await signIn("credentials", {
+      if (!existingUser.password || typeof existingUser.password !== 'string') {
+         return {
+            error: "Invalid Credentials"
+         };
+      }
+
+      const passwordsMatch = await bcrypt.compare(password, existingUser.password);
+
+      if (!passwordsMatch) {
+         return {
+            error: "Passwords do not match"
+         };
+      }
+
+      const result = await signIn("credentials", {
          email,
          password,
-         redirectTo: "/setting",
+         redirect: false
       });
+
+      if (result?.error) {
+         return {
+            error: result.error
+         };
+      }
+
+      return { success: "LogIn" };
    } catch (error) {
       if (error instanceof AuthError) {
          switch (error.type) {
@@ -43,8 +66,9 @@ export const login = async (data: TloginFormData) => {
          }
       }
       throw error;
-   };
+   }
 };
+
 export const registerData = async (data: TregisterFormData) => {
    const validatedFields = registerFormSchema.safeParse(data);
 
@@ -57,14 +81,25 @@ export const registerData = async (data: TregisterFormData) => {
    const { email, password, firstName, lastName } = validatedFields.data;
 
    try {
-      await prisma?.user.create({
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      const existingUser = await getUserByEmail(email);
+      if (existingUser) {
+         return {
+            error: "Email already exists!"
+         };
+      }
+
+      await prisma.user.create({
          data: {
             email,
-            password,
+            password: hashedPassword,
             lastName,
             firstName
          }
       });
+
+      return { success: "Account Created!" };
    } catch (error) {
       if (error instanceof AuthError) {
          switch (error.type) {
@@ -78,6 +113,8 @@ export const registerData = async (data: TregisterFormData) => {
                };
          }
       }
-      throw error;
-   };
+      return {
+         error: "Something went wrong"
+      };
+   }
 };
