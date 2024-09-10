@@ -6,10 +6,9 @@ import { fromImage } from "@/public";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { registerData } from "@/action/user";
 import { TregisterFormData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Socials, registerFormSchema } from "@/export";
+import { Socials, registerFormSchema, registerData } from "@/export";
 
 export default function RegisterForm() {
 	const router = useRouter();
@@ -145,7 +144,7 @@ export default function RegisterForm() {
 								</p>
 								<Link
 									className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline"
-									href="/terms-and-conditions">
+									href="/">
 									Terms & Conditions
 								</Link>
 							</div>

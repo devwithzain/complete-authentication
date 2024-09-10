@@ -3,13 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
-import { login } from "@/action/user";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { TloginFormData } from "@/schemas";
-import { Socials, loginFormSchema } from "@/export";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Socials, loginFormSchema, login } from "@/export";
 
 export default function LoginForm() {
 	const router = useRouter();
