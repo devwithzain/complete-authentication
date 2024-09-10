@@ -23,7 +23,7 @@ export default {
                const { email, password } = validatedFields.data;
 
                const user = await getUserByEmail(email);
-               if (!user || !user.password || user?.email) return null;
+               if (!user || !user.password) return null;
 
                const passwordsMatch = await bcrypt.compare(
                   password,
