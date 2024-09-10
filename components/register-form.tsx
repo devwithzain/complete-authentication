@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
@@ -7,9 +6,10 @@ import { fromImage } from "@/public";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { registerData } from "@/action/user";
 import { TregisterFormData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerFormSchema, Socials } from "@/export";
+import { Socials, registerFormSchema } from "@/export";
 
 export default function RegisterForm() {
 	const router = useRouter();
@@ -23,15 +23,17 @@ export default function RegisterForm() {
 	});
 
 	const onSubmits = async (data: TregisterFormData) => {
-		try {
-			await axios.post("/api/register", data);
-			toast.success("Account Created!");
-			router.push("/sign-in");
-		} catch (error: any) {
-			toast.error(error.response.data.error);
+		const response = await registerData(data);
+		if (response.error) {
+			toast.error(response.error);
 			reset();
 		}
+		if (response.success) {
+			toast.success(response.success);
+			router.push("/sign-in");
+		}
 	};
+
 	return (
 		<motion.div
 			initial={{ y: "115%" }}
@@ -139,7 +141,7 @@ export default function RegisterForm() {
 									className="w-5 h-5 outline-none border-none"
 								/>
 								<p className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
-									I agrree to the
+									I agree to the
 								</p>
 								<Link
 									className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline"

@@ -1,17 +1,18 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
+import { login } from "@/action/user";
 import { motion } from "framer-motion";
-import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { TloginFormData } from "@/schemas";
 import { Socials, loginFormSchema } from "@/export";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function LoginForm() {
+	const router = useRouter();
 	const {
 		register,
 		reset,
@@ -22,17 +23,14 @@ export default function LoginForm() {
 	});
 
 	const onSubmits = async (data: TloginFormData) => {
-		try {
-			await axios.post("/api/login", data);
-			await signIn("credentials", {
-				email: data.email,
-				password: data.password,
-				redirectTo: "/setting",
-			});
-			toast.success("LogIn");
-		} catch (error: any) {
-			toast.error(error.response?.data?.error || "Login failed");
+		const response = await login(data);
+		if (response.error) {
+			toast.error(response.error);
 			reset();
+		}
+		if (response.success) {
+			toast.success(response.success);
+			router.push("/setting");
 		}
 	};
 
