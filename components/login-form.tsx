@@ -5,13 +5,11 @@ import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { TloginFormData } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Socials, loginFormSchema, login } from "@/export";
 
 export default function LoginForm() {
-	const router = useRouter();
 	const {
 		register,
 		reset,
@@ -23,13 +21,12 @@ export default function LoginForm() {
 
 	const onSubmits = async (data: TloginFormData) => {
 		const response = await login(data);
-		if (response.error) {
+		if (response?.error) {
 			toast.error(response.error);
 			reset();
 		}
-		if (response.success) {
+		if (response?.success) {
 			toast.success(response.success);
-			router.push("/setting");
 		}
 	};
 
