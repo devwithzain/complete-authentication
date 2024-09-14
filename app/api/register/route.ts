@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { getUserByEmail, prisma, registerFormSchema } from "@/export";
+import { getUserByEmail } from "@/data/user";
+import { registerFormSchema } from "@/schemas";
 
 export async function POST(request: Request) {
    try {
@@ -12,7 +14,7 @@ export async function POST(request: Request) {
          return NextResponse.json({ error: "Invalid input data" }, { status: 400 });
       }
 
-      const { firstName, lastName, email, password } = validatedFields.data;
+      const { email, password, firstName, lastName } = validatedFields.data;
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -26,10 +28,10 @@ export async function POST(request: Request) {
       // Create the user in the database
       const user = await prisma.user.create({
          data: {
-            firstName,
-            lastName,
             email,
             password: hashedPassword,
+            firstName,
+            lastName
          }
       });
 

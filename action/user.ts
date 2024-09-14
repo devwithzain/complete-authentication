@@ -2,9 +2,11 @@
 
 import bcrypt from 'bcryptjs';
 import { signIn } from "@/auth";
+import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
-import { TloginFormData, TregisterFormData } from "@/schemas";
-import { getUserByEmail, prisma, loginFormSchema, registerFormSchema, } from "@/export";
+import { getUserByEmail } from "@/data/user";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { loginFormSchema, registerFormSchema, TloginFormData, TregisterFormData } from "@/schemas";
 
 export const login = async (data: TloginFormData) => {
    const validatedFields = loginFormSchema.safeParse(data);
@@ -39,17 +41,11 @@ export const login = async (data: TloginFormData) => {
          };
       }
 
-      const result = await signIn("credentials", {
+      await signIn("credentials", {
          email,
          password,
-         redirect: false
+         redirectTo: DEFAULT_LOGIN_REDIRECT
       });
-
-      if (result?.error) {
-         return {
-            error: result.error
-         };
-      }
 
       return { success: "LogIn" };
    } catch (error) {
@@ -94,8 +90,8 @@ export const registerData = async (data: TregisterFormData) => {
          data: {
             email,
             password: hashedPassword,
-            lastName,
-            firstName
+            firstName,
+            lastName
          }
       });
 
@@ -113,8 +109,6 @@ export const registerData = async (data: TregisterFormData) => {
                };
          }
       }
-      return {
-         error: "Something went wrong"
-      };
+      throw error;
    }
 };

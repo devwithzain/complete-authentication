@@ -4,14 +4,16 @@ import {
    authRoutes,
    publicRoutes,
 } from "@/routes";
+import NextAuth from "next-auth";
+import authConfig from "@/auth.config";
+const { auth } = NextAuth(authConfig);
 
-export default async function middleware(req: any) {
+export default auth((req: any) => {
    const { nextUrl } = req;
    const isLoggedIn = !!req.auth;
-
-   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
    const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
    if (isApiAuthRoute) {
       return undefined; // No redirection for API auth routes
@@ -32,7 +34,7 @@ export default async function middleware(req: any) {
    }
 
    return undefined;
-}
+});
 
 export const config = {
    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
