@@ -4,11 +4,12 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { motion } from "framer-motion";
+import Socials from "@/components/socials";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { TregisterFormData } from "@/schemas";
+import { registerData } from "@/action/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Socials, registerFormSchema, registerData } from "@/export";
+import { registerFormSchema, TregisterFormData } from "@/schemas";
 
 export default function RegisterForm() {
 	const router = useRouter();
