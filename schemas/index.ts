@@ -1,5 +1,17 @@
 import * as z from "zod";
 
+export const resetFormSchema = z.object({
+  email: z.string().email({
+    message: "Email is required",
+  }),
+});
+
+export const newPasswordFormSchema = z.object({
+  password: z.string().min(6, {
+    message: "Minimum 6 characters required",
+  }),
+});
+
 export const loginFormSchema = z.object({
   email: z.string().email({
     message: "Email is required",
@@ -25,4 +37,6 @@ export const registerFormSchema = z.object({
 });
 
 export type TloginFormData = z.infer<typeof loginFormSchema>;
+export type TresetFormData = z.infer<typeof resetFormSchema>;
 export type TregisterFormData = z.infer<typeof registerFormSchema>;
+export type TnewPasswordFormData = z.infer<typeof newPasswordFormSchema>;
