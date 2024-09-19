@@ -6,7 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import { getUserByEmail } from "@/data/user";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { generateVerificationToken } from "@/lib/tokens";
 import { loginFormSchema, registerFormSchema, TloginFormData, TregisterFormData } from "@/schemas";
+import { sendverificationEmail } from "@/lib/mail";
 
 export const login = async (data: TloginFormData) => {
    const validatedFields = loginFormSchema.safeParse(data);
@@ -20,9 +22,20 @@ export const login = async (data: TloginFormData) => {
    const { email, password } = validatedFields.data;
 
    const existingUser = await getUserByEmail(email);
-   if (!existingUser) {
+   if (!existingUser || !existingUser.email || !existingUser.password) {
       return {
-         error: "Email not found"
+         error: "Email does not exist"
+      };
+   }
+
+   if (!existingUser.emailVerified) {
+      const verificationToken = await generateVerificationToken(existingUser.email);
+      await sendverificationEmail(
+         verificationToken.email,
+         verificationToken.token,
+      );
+      return {
+         success: "Confirmation email sent!"
       };
    }
 
@@ -95,7 +108,13 @@ export const registerData = async (data: TregisterFormData) => {
          }
       });
 
-      return { success: "Account Created!" };
+      const verificationToken = await generateVerificationToken(email);
+      await sendverificationEmail(
+         verificationToken.email,
+         verificationToken.token,
+      );
+
+      return { success: "Confirmation email sent!" };
    } catch (error) {
       if (error instanceof AuthError) {
          switch (error.type) {
