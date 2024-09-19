@@ -3,28 +3,25 @@ import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
-import { login } from "@/action/user";
+import { reset } from "@/action/reset";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import Socials from "@/components/socials";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginFormSchema, TloginFormData } from "@/schemas";
+import { resetFormSchema, TresetFormData } from "@/schemas";
 
-export default function LoginForm() {
+export default function ResetForm() {
 	const {
 		register,
-		reset,
 		handleSubmit,
 		formState: { isSubmitting, errors },
-	} = useForm<TloginFormData>({
-		resolver: zodResolver(loginFormSchema),
+	} = useForm<TresetFormData>({
+		resolver: zodResolver(resetFormSchema),
 	});
 
-	const onSubmits = async (data: TloginFormData) => {
-		const response = await login(data);
+	const onSubmits = async (data: TresetFormData) => {
+		const response = await reset(data);
 		if (response?.error) {
 			toast.error(response.error);
-			reset();
 		}
 		if (response?.success) {
 			toast.success(response.success);
@@ -49,21 +46,11 @@ export default function LoginForm() {
 					/>
 				</div>
 				<div className="w-1/2 flex items-center justify-center">
-					<div className="w-full px-10 flex justify-center flex-col gap-8">
+					<div className="w-full px-10 flex justify-center flex-col gap-5">
 						<div className="flex flex-col gap-4">
-							<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
-								Welcome back
+							<h1 className="text-[30px] text-white font-medium leading-tight tracking-tight">
+								Forgot password
 							</h1>
-							<div className="flex items-center gap-2">
-								<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
-									Don&apos;t have an account?
-								</button>
-								<Link
-									href="/sign-up"
-									className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline">
-									Create
-								</Link>
-							</div>
 						</div>
 						<form
 							onSubmit={handleSubmit(onSubmits)}
@@ -84,35 +71,21 @@ export default function LoginForm() {
 										</span>
 									)}
 								</div>
-								<div className="flex flex-col gap-2">
-									<input
-										type="password"
-										{...register("password")}
-										placeholder="Enter your password"
-										className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-											errors.password && "border-red-500 border-[1px]"
-										}`}
-									/>
-									{errors.password && (
-										<span className="text-red-500 text-sm">
-											{errors.password.message}
-										</span>
-									)}
-									<Link
-										className="text-[#ADABB8] text-sm font-normal leading-tight tracking-tight pt-2 hover:underline"
-										href="/reset">
-										Forgot password
-									</Link>
-								</div>
 							</div>
 							<input
 								type="submit"
-								value={`${isSubmitting ? "Loading..." : "Log In"}`}
+								value={`${isSubmitting ? "Loading..." : "Send reset email"}`}
 								className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
 								disabled={isSubmitting}
 							/>
 						</form>
-						<Socials />
+						<div>
+							<Link
+								href="/sign-in"
+								className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight hover:underline">
+								Back to LogIn
+							</Link>
+						</div>
 					</div>
 				</div>
 			</div>
