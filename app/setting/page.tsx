@@ -15,6 +15,7 @@ export default async function Setting() {
 		<div>
 			<h1>Settings</h1>
 			<p>Email: {session.user.email}</p>
+			<p>Session: {JSON.stringify(session)}</p>
 			<form
 				action={async () => {
 					"use server";
