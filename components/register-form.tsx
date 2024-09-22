@@ -74,31 +74,16 @@ export default function RegisterForm() {
 							<div className="w-full flex items-center justify-between gap-5">
 								<div className="w-full flex flex-col gap-2">
 									<input
-										{...register("firstName")}
 										type="text"
-										placeholder="First Name"
+										{...register("name")}
+										placeholder="Name"
 										className={`w-full bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-											errors.firstName && "border-red-500 border-[1px]"
+											errors.name && "border-red-500 border-[1px]"
 										}`}
 									/>
-									{errors.firstName && (
+									{errors.name && (
 										<span className="text-red-500 text-sm">
-											{errors.firstName.message}
-										</span>
-									)}
-								</div>
-								<div className="w-full flex flex-col gap-2">
-									<input
-										type="text"
-										{...register("lastName")}
-										placeholder="Last Name"
-										className={`w-full bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-											errors.lastName && "border-red-500 border-[1px]"
-										}`}
-									/>
-									{errors.lastName && (
-										<span className="text-red-500 text-sm">
-											{errors.lastName.message}
+											{errors.name.message}
 										</span>
 									)}
 								</div>

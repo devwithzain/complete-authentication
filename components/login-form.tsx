@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { login } from "@/action/user";
@@ -11,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema, TloginFormData } from "@/schemas";
 
 export default function LoginForm() {
+	const [showTwoFactor, setshowTwoFactor] = useState(false);
 	const {
 		register,
 		reset,
@@ -28,6 +30,10 @@ export default function LoginForm() {
 		}
 		if (response?.success) {
 			toast.success(response.success);
+			reset();
+		}
+		if (response?.twoFactor) {
+			setshowTwoFactor(true);
 		}
 	};
 
@@ -50,68 +56,107 @@ export default function LoginForm() {
 				</div>
 				<div className="w-1/2 flex items-center justify-center">
 					<div className="w-full px-10 flex justify-center flex-col gap-8">
-						<div className="flex flex-col gap-4">
-							<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
-								Welcome back
-							</h1>
-							<div className="flex items-center gap-2">
-								<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
-									Don&apos;t have an account?
-								</button>
-								<Link
-									href="/sign-up"
-									className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline">
-									Create
-								</Link>
-							</div>
-						</div>
-						<form
-							onSubmit={handleSubmit(onSubmits)}
-							className="flex flex-col gap-5">
-							<div className="flex flex-col gap-5">
-								<div className="flex flex-col gap-2">
-									<input
-										type="email"
-										{...register("email")}
-										placeholder="Email"
-										className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-											errors.email && "border-red-500 border-[1px]"
-										}`}
-									/>
-									{errors.email && (
-										<span className="text-red-500 text-sm">
-											{errors.email.message}
-										</span>
-									)}
+						{showTwoFactor && (
+							<>
+								<div className="flex flex-col gap-4">
+									<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
+										Enter Two Factor Code
+									</h1>
 								</div>
-								<div className="flex flex-col gap-2">
+								<form
+									onSubmit={handleSubmit(onSubmits)}
+									className="flex flex-col gap-5">
+									<div className="flex flex-col gap-5">
+										<div className="flex flex-col gap-2">
+											<input
+												{...register("code")}
+												placeholder="Enter two factor code"
+												className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+													errors.code && "border-red-500 border-[1px]"
+												}`}
+											/>
+											{errors.code && (
+												<span className="text-red-500 text-sm">
+													{errors.code.message}
+												</span>
+											)}
+										</div>
+									</div>
 									<input
-										type="password"
-										{...register("password")}
-										placeholder="Enter your password"
-										className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
-											errors.password && "border-red-500 border-[1px]"
-										}`}
+										type="submit"
+										value={`${isSubmitting ? "Loading..." : "Confirm"}`}
+										className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
+										disabled={isSubmitting}
 									/>
-									{errors.password && (
-										<span className="text-red-500 text-sm">
-											{errors.password.message}
-										</span>
-									)}
-									<Link
-										className="text-[#ADABB8] text-sm font-normal leading-tight tracking-tight pt-2 hover:underline"
-										href="/reset">
-										Forgot password
-									</Link>
+								</form>
+							</>
+						)}
+						{!showTwoFactor && (
+							<>
+								<div className="flex flex-col gap-4">
+									<h1 className="text-[40px] text-white font-medium leading-tight tracking-tight">
+										Welcome back
+									</h1>
+									<div className="flex items-center gap-2">
+										<button className="text-sm text-[#ADABB8] font-normal leading-tight tracking-tight">
+											Don&apos;t have an account?
+										</button>
+										<Link
+											href="/sign-up"
+											className="text-sm text-[#9887c9] font-normal leading-tight tracking-tight underline">
+											Create
+										</Link>
+									</div>
 								</div>
-							</div>
-							<input
-								type="submit"
-								value={`${isSubmitting ? "Loading..." : "Log In"}`}
-								className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
-								disabled={isSubmitting}
-							/>
-						</form>
+								<form
+									onSubmit={handleSubmit(onSubmits)}
+									className="flex flex-col gap-5">
+									<div className="flex flex-col gap-5">
+										<div className="flex flex-col gap-2">
+											<input
+												type="email"
+												{...register("email")}
+												placeholder="Email"
+												className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+													errors.email && "border-red-500 border-[1px]"
+												}`}
+											/>
+											{errors.email && (
+												<span className="text-red-500 text-sm">
+													{errors.email.message}
+												</span>
+											)}
+										</div>
+										<div className="flex flex-col gap-2">
+											<input
+												type="password"
+												{...register("password")}
+												placeholder="Enter your password"
+												className={`bg-[#3A364D] text-white placeholder:text-[#6D6980] rounded-lg p-4 ${
+													errors.password && "border-red-500 border-[1px]"
+												}`}
+											/>
+											{errors.password && (
+												<span className="text-red-500 text-sm">
+													{errors.password.message}
+												</span>
+											)}
+											<Link
+												className="text-[#ADABB8] text-sm font-normal leading-tight tracking-tight pt-2 hover:underline"
+												href="/reset">
+												Forgot password
+											</Link>
+										</div>
+									</div>
+									<input
+										type="submit"
+										value={`${isSubmitting ? "Loading..." : "Log In"}`}
+										className="w-full bg-[#6C54B6] rounded-lg p-4 text-[16px] text-white font-normal text-center leading-tight tracking-tight cursor-pointer"
+										disabled={isSubmitting}
+									/>
+								</form>
+							</>
+						)}
 						<Socials />
 					</div>
 				</div>
