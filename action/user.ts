@@ -56,7 +56,6 @@ export const login = async (data: TloginFormData) => {
       }
 
       if (existingUser.isTwoFactorEnabled && existingUser.email) {
-         // Fetch the stored token for the user (if it exists)
          const existingTwoFactorToken = await prisma.twoFactorToken.findFirst({
             where: {
                email: existingUser.email
@@ -64,34 +63,24 @@ export const login = async (data: TloginFormData) => {
          });
 
          if (code) {
-            // If user has provided the code, check if the existing token matches
             if (!existingTwoFactorToken) {
                return { error: "Invalid Code!" };
             }
 
-            console.log("User-provided code:", code);
-            console.log("Stored token:", existingTwoFactorToken.token);
-
-            // Check if the provided code matches the token
             if (existingTwoFactorToken.token !== code) {
                return { error: "Invalid Code!" };
             }
 
-            // Check if the token has expired
             const hasExpired = new Date(existingTwoFactorToken.expires) < new Date();
             if (hasExpired) {
                return { error: "Code has expired!" };
             }
-            console.log("Has token expired:", hasExpired);
-
-            // Delete the token after successful validation
             await prisma.twoFactorToken.delete({
                where: {
                   id: existingTwoFactorToken.id
                }
             });
 
-            // Handle two-factor confirmation
             const existingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
             if (existingConfirmation) {
                await prisma.twoFactorConfirmation.delete({
@@ -108,7 +97,6 @@ export const login = async (data: TloginFormData) => {
             });
 
          } else {
-            // If no code is provided, send a new two-factor token
             if (!existingTwoFactorToken) {
                const newTwoFactorToken = await generateTwoFactorToken(existingUser.email);
                await sendTwoFactorTokenEmail(
