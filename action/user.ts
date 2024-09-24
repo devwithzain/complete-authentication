@@ -160,8 +160,8 @@ export const registerData = async (data: TregisterFormData) => {
       await prisma.user.create({
          data: {
             email,
+            name,
             password: hashedPassword,
-            name
          }
       });
 

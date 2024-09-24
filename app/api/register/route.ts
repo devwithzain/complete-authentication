@@ -14,7 +14,7 @@ export async function POST(request: Request) {
          return NextResponse.json({ error: "Invalid input data" }, { status: 400 });
       }
 
-      const { email, password, firstName, lastName } = validatedFields.data;
+      const { email, password, name } = validatedFields.data;
 
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -30,8 +30,7 @@ export async function POST(request: Request) {
          data: {
             email,
             password: hashedPassword,
-            firstName,
-            lastName
+            name
          }
       });
 

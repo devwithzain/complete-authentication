@@ -16,7 +16,7 @@ export default auth((req: any) => {
    const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
    if (isApiAuthRoute) {
-      return undefined; // No redirection for API auth routes
+      return undefined;
    }
 
    if (isAuthRoute) {
