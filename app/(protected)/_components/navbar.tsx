@@ -1,6 +1,6 @@
 "use client";
-import { logout } from "@/action/logout";
 import Link from "next/link";
+import { logout } from "@/action/logout";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -12,8 +12,8 @@ export default function Navbar() {
 					<button
 						className={`px-4 shadow-lg py-2 rounded-lg ${
 							pathName == "/server"
-								? "bg-[#3A364D] text-white"
-								: "bg-white text-black"
+								? "bg-[#6C54B6] text-white"
+								: "bg-[#9887c9] text-white"
 						} leading-tight tracking-tight`}>
 						Server
 					</button>
@@ -22,8 +22,8 @@ export default function Navbar() {
 					<button
 						className={`px-4 shadow-lg py-2 rounded-lg ${
 							pathName == "/client"
-								? "bg-[#3A364D] text-white"
-								: "bg-white text-black"
+								? "bg-[#6C54B6] text-white"
+								: "bg-[#9887c9] text-white"
 						} leading-tight tracking-tight`}>
 						Client
 					</button>
@@ -32,8 +32,8 @@ export default function Navbar() {
 					<button
 						className={`px-4 shadow-lg py-2 rounded-lg ${
 							pathName == "/admin"
-								? "bg-[#3A364D] text-white"
-								: "bg-white text-black"
+								? "bg-[#6C54B6] text-white"
+								: "bg-[#9887c9] text-white"
 						} leading-tight tracking-tight`}>
 						Admin
 					</button>
@@ -42,8 +42,8 @@ export default function Navbar() {
 					<button
 						className={`px-4 shadow-lg py-2 rounded-lg ${
 							pathName == "/setting"
-								? "bg-[#3A364D] text-white"
-								: "bg-white text-black"
+								? "bg-[#6C54B6] text-white"
+								: "bg-[#9887c9] text-white"
 						} leading-tight tracking-tight`}>
 						Setings
 					</button>
@@ -52,7 +52,7 @@ export default function Navbar() {
 			<div>
 				<button
 					onClick={() => logout()}
-					className="px-4 py-2 rounded-lg bg-white text-black leading-tight tracking-tight">
+					className="px-4 py-2 rounded-lg bg-[#9887c9] text-white leading-tight tracking-tight">
 					Log Out
 				</button>
 			</div>

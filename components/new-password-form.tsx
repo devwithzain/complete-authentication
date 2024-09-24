@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { fromImage } from "@/public";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { newPassword } from "@/action/new-password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newPasswordFormSchema, TnewPasswordFormData } from "@/schemas";
@@ -13,6 +13,7 @@ import { newPasswordFormSchema, TnewPasswordFormData } from "@/schemas";
 export default function NewPasswordForm() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
+	const router = useRouter();
 
 	const {
 		register,
@@ -29,6 +30,7 @@ export default function NewPasswordForm() {
 		}
 		if (response?.success) {
 			toast.success(response.success);
+			router.push("/sign-in");
 		}
 	};
 

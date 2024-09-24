@@ -15,7 +15,6 @@ export default function LoginForm() {
 	const [showTwoFactor, setshowTwoFactor] = useState(false);
 	const {
 		register,
-		reset,
 		handleSubmit,
 		formState: { isSubmitting, errors },
 	} = useForm<TloginFormData>({
@@ -26,15 +25,12 @@ export default function LoginForm() {
 		const response = await login(data);
 		if (response?.error) {
 			toast.error(response.error);
-			reset();
 		}
 		if (response?.success) {
 			toast.success(response.success);
-			reset();
 		}
 		if (response?.twoFactor) {
 			setshowTwoFactor(true);
-			reset();
 		}
 	};
 
