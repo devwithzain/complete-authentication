@@ -6,7 +6,7 @@ export default function ProtectedLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="w-full h-screen flex flex-col gap-5 items-center justify-center bg-[#2A273A]">
+		<div className="w-full h-screen flex flex-col gap-5 items-center justify-center">
 			<Navbar />
 			{children}
 		</div>

@@ -34,6 +34,7 @@ export default function LoginForm() {
 		}
 		if (response?.twoFactor) {
 			setshowTwoFactor(true);
+			reset();
 		}
 	};
 
